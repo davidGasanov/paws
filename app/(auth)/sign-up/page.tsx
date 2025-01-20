@@ -9,16 +9,16 @@ import { APP_NAME } from "@/lib/constants";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import CredentialsSignInForm from "./credentials-signin-form";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import CredentialsSignupForm from "./credentials-signup-form";
 
 export const metaData: Metadata = {
   title: "Sign in",
   description: "Sign in to your account",
 };
 
-const SignInPage = async (props: {
+const SignUpPage = async (props: {
   searchParams: Promise<{
     callbackUrl: string;
   }>;
@@ -44,17 +44,17 @@ const SignInPage = async (props: {
               alt={`${APP_NAME} logo`}
             />
           </Link>
-          <CardTitle className="text-center">Sign in</CardTitle>
+          <CardTitle className="text-center">Create an account</CardTitle>
           <CardDescription className="text-center">
-            Sign in to your account
+            Enter your information below to sign up
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <CredentialsSignInForm />
+          <CredentialsSignupForm />
         </CardContent>
       </Card>
     </div>
   );
 };
 
-export default SignInPage;
+export default SignUpPage;

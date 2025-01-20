@@ -11,3 +11,10 @@ export const LATEST_PRODUCTS_LIMIT =
     email: '',
     password: '',
   }
+
+  export const SIGNUP_DEFAULT_VALUES = {
+    email: '',
+    name: '',
+    password: '',
+    confirmPassword: '',
+  }

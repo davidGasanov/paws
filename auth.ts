@@ -24,6 +24,8 @@ export const config = {
       async authorize(credentials) {
         if (credentials === null) return null;
 
+        console.log("credentials in signin: ", credentials);
+
         // Find user in db
         const user = await prisma.user.findFirst({
           where: {
@@ -55,16 +57,36 @@ export const config = {
     }),
   ],
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    async session({ session, user, trigger, token }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async session({ session, user, trigger, token }: any) {
       session.user.id = token.sub || "";
+      session.user.role = token.role;
+      session.user.name = token.name;
 
       if (trigger === "update") {
         session.user.name = user.name;
       }
 
       return session;
+    },
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async jwt({ token, user }: any) {
+      if (user) {
+        token.role = user.role;
+
+        // If user has no name, set it to their email
+        if (user.name === "NO_NAME") {
+          token.name = user.email!.split("@")[0];
+
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { name: token.name },
+          });
+        }
+      }
+
+      return token;
     },
   },
 } satisfies NextAuthConfig;

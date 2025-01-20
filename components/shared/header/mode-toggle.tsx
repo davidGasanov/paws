@@ -17,8 +17,6 @@ const ModeToggle = () => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  console.log("theme", theme);
-
   const IconByTheme = {
     light: <Sun />,
     dark: <Moon />,
