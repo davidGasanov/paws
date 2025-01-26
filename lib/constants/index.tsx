@@ -6,15 +6,30 @@ export const SERVER_URL =
 export const LATEST_PRODUCTS_LIMIT =
   Number(process.env.NEXT_PUBLIC_LATEST_PRODUCTS_LIMIT) || 4;
 
+export const SIGNIN_DEFAULT_VALUES = {
+  email: "",
+  password: "",
+};
 
-  export const SIGNIN_DEFAULT_VALUES = {
-    email: '',
-    password: '',
-  }
+export const SIGNUP_DEFAULT_VALUES = {
+  email: "",
+  name: "",
+  password: "",
+  confirmPassword: "",
+};
 
-  export const SIGNUP_DEFAULT_VALUES = {
-    email: '',
-    name: '',
-    password: '',
-    confirmPassword: '',
-  }
+export const SHIPPING_ADDRESS_DEFAULT_VALUES = {
+  fullName: "John Doe",
+  streetAddress: "123 Main St",
+  city: "Anytown",
+  postalCode: "12345",
+  country: "USA",
+};
+
+export const SHIPPING_ADDRESS_DEFAULT_VALUES_EMPTY = {
+  fullName: "",
+  streetAddress: "",
+  city: "",
+  postalCode: "",
+  country: "",
+};

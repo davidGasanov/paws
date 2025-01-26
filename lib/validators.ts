@@ -1,9 +1,12 @@
 import { z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 
-const currency = z.string().refine((val) => {
-  /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(val)));
-}, "Price must have exactly 2 decimal places");
+const currency = z
+  .string()
+  .refine(
+    (val) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(Number(val))),
+    "Price must have exactly 2 decimal places"
+  );
 
 // Schema for inserting products
 
@@ -64,4 +67,16 @@ export const insertCartSchema = z.object({
   shippingPrice: currency,
   userId: z.string().optional().nullable(),
   sessionCartId: z.string().min(1, "Session Cart Id is required"),
+});
+
+export const shippingAddressSchema = z.object({
+  fullName: z.string().min(3, "Full name must be at least 3 characters"),
+  streetAddress: z
+    .string()
+    .min(3, "Street address must be at least 3 characters"),
+  city: z.string().min(3, "City must be at least 3 characters"),
+  postalCode: z.string().min(3, "Postal code must be at least 3 characters"),
+  country: z.string().min(3, "Country must be at least 3 characters"),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
 });

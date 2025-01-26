@@ -33,3 +33,30 @@ export function formatError(error: any) {
       : JSON.stringify(error.message);
   }
 }
+
+export function round2(num: number | string) {
+  if (typeof num === "number") {
+    return Math.round(((num + Number.EPSILON) * 100) / 100);
+  } else if (typeof num === "string") {
+    return Math.round(((Number(num) + Number.EPSILON) * 100) / 100);
+  } else {
+    throw new Error("not a number or string");
+  }
+}
+
+const CURRENCY_FORMATTER = new Intl.NumberFormat("en-US", {
+  currency: "USD",
+  style: "currency",
+  minimumFractionDigits: 2,
+});
+
+// Format currency using the formatter above
+export function formatCurrency(amount: number | string | null) {
+  if (typeof amount === "number") {
+    return CURRENCY_FORMATTER.format(amount);
+  } else if (typeof amount === "string") {
+    return CURRENCY_FORMATTER.format(Number(amount));
+  } else {
+    return NaN;
+  }
+}
