@@ -5,9 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { updateUserAddress } from "@/lib/actions/user.actions";
-import {
-  SHIPPING_ADDRESS_DEFAULT_VALUES_EMPTY
-} from "@/lib/constants";
+import { SHIPPING_ADDRESS_DEFAULT_VALUES_EMPTY } from "@/lib/constants";
 import { shippingAddressSchema } from "@/lib/validators";
 import { ShippingAddress } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -60,26 +58,6 @@ const ShippingAddressForm = ({ address }: ShippingAddressFormProps) => {
             className="space-y-4"
             onSubmit={form.handleSubmit(onSubmit)}
           >
-            {/* Remove if below components work correctly */}
-            {/* <div className="flex flex-col md:flex-row gap-5">
-              <FormField
-                control={form.control}
-                name="fullName"
-                render={({
-                  field,
-                }: {
-                  field: ControllerRenderProps<ShippingAddress, "fullName">;
-                }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>Full name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your full name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div> */}
             <ShippingFormField
               name="fullName"
               label="Full name"
