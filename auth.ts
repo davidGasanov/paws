@@ -27,8 +27,6 @@ export const config = {
       async authorize(credentials) {
         if (credentials === null) return null;
 
-        console.log("credentials in signin: ", credentials);
-
         // Find user in db
         const user = await prisma.user.findFirst({
           where: {
@@ -104,7 +102,7 @@ export const config = {
     },
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async jwt({ token, user, trigger }: any) {
+    async jwt({ token, session, user, trigger }: any) {
       if (user) {
         token.role = user.role;
         token.id = user.id;
@@ -140,6 +138,10 @@ export const config = {
         }
       }
 
+      // Handle session update
+      if (session?.user?.name && trigger === "update") {
+        token.name = session.user.name;
+      }
       return token;
     },
   },
