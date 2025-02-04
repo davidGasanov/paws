@@ -14,6 +14,7 @@ import Link from "next/link";
 const UserButton = async () => {
   const session = await auth();
 
+
   if (!session) {
     return (
       <Button asChild>
@@ -59,9 +60,9 @@ const UserButton = async () => {
             <Link href="/user/orders">Order History</Link>
           </DropdownMenuItem>
 
-          {session?.user?.role === "Admin" && (
+          {session?.user?.role === "admin" && (
             <DropdownMenuItem>
-              <Link href="/admin/overview">Order History</Link>
+              <Link href="/admin/overview">Admin</Link>
             </DropdownMenuItem>
           )}
 
