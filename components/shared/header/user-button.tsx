@@ -14,7 +14,6 @@ import Link from "next/link";
 const UserButton = async () => {
   const session = await auth();
 
-
   if (!session) {
     return (
       <Button asChild>
