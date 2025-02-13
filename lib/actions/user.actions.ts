@@ -12,6 +12,7 @@ import {
   signInFormSchema,
   signUpFormSchema,
 } from "../validators";
+import { PAGE_SIZE } from "../constants";
 
 export async function signInWithCredentials(
   prevState: unknown,
@@ -160,4 +161,24 @@ export async function updateProfile(user: { name: string; email: string }) {
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
+}
+
+// Get all users
+
+export async function getAllUsers({
+  limit = PAGE_SIZE,
+  page,
+}: {
+  limit?: number;
+  page: number;
+}) {
+  const data = await prisma.user.findMany({
+    skip: (page - 1) * limit,
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+
+  const dataCount = await prisma.user.count();
+
+  return { data, totalPages: Math.ceil(dataCount / limit) };
 }
