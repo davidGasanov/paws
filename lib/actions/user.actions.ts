@@ -13,6 +13,7 @@ import {
   signUpFormSchema,
 } from "../validators";
 import { PAGE_SIZE } from "../constants";
+import { revalidatePath } from "next/cache";
 
 export async function signInWithCredentials(
   prevState: unknown,
@@ -181,4 +182,19 @@ export async function getAllUsers({
   const dataCount = await prisma.user.count();
 
   return { data, totalPages: Math.ceil(dataCount / limit) };
+}
+
+// Delete a user
+
+export async function deleteUser(id: string) {
+  try {
+    await prisma.user.delete({
+      where: { id },
+    });
+
+    revalidatePath("/admin/users");
+    return { success: true, message: "User deleted" };
+  } catch (error) {
+    return { success: false, message: formatError(error) };
+  }
 }
