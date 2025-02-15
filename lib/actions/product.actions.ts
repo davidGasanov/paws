@@ -6,6 +6,7 @@ import { LATEST_PRODUCTS_LIMIT, PAGE_SIZE } from "../constants";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { insertProductSchema, updateProductSchema } from "../validators";
+import { Prisma } from "@prisma/client";
 
 // Get latest products
 export async function getLatestProducts() {
@@ -43,21 +44,30 @@ export async function getAllProducts({
   limit = PAGE_SIZE,
   page,
   query,
-  category,
 }: {
   limit?: number;
   page: number;
   query: string;
-  category?: string;
 }) {
+  const queryFilter: Prisma.ProductWhereInput =
+    query && query !== "all"
+      ? {
+          name: {
+            contains: query,
+            mode: "insensitive",
+          } as Prisma.StringFilter,
+        }
+      : {};
+
   try {
     const data = await prisma.product.findMany({
       orderBy: { createdAt: "desc" },
       take: limit,
       skip: (page - 1) * limit,
+      where: queryFilter,
     });
 
-    const dataCount = await prisma.product.count();
+    const dataCount = await prisma.product.count({ where: queryFilter });
 
     if (!data) {
       throw new Error("Error fetching products");
@@ -123,4 +133,14 @@ export async function updateProduct(data: z.infer<typeof updateProductSchema>) {
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
+}
+
+// Get all categories
+export async function getAllCategories() {
+  const data = await prisma.product.groupBy({
+    by: ["category"],
+    _count: true,
+  });
+
+  return data;
 }
