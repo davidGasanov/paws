@@ -34,10 +34,7 @@ const CategoryDrawer = async () => {
                   className="w-full justify-start"
                 >
                   <DrawerClose asChild>
-                    <Link
-                      href={`/search/${category}`}
-                      className="flex"
-                    >
+                    <Link href={`/search/${category}`} className="flex">
                       {category} ({_count})
                     </Link>
                   </DrawerClose>
