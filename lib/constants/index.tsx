@@ -97,3 +97,9 @@ export const SEARCH_FILTERS = {
   ratings: [4, 3, 2, 1],
   sortOrders: ["newest", "lowest", "highest", "rating"],
 };
+
+export const REVIEW_DEFAULT_VALUES = {
+  title: "",
+  comment: "",
+  rating: 0,
+};
