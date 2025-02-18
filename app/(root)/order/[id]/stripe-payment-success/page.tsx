@@ -40,10 +40,7 @@ const StripePaymentSuccessPage = async (props: {
         <h1 className="h1-bold">Thank you for your purchase!</h1>
         <div>We are processing your order.</div>
         <Button asChild>
-          <Link href={`/order/${id}`} >
-          View order
-          
-          </Link>
+          <Link href={`/order/${id}`}>View order</Link>
         </Button>
       </div>
     </div>
