@@ -6,7 +6,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-// import { PROTECTED_PATHS } from "./lib/constants";
+import { PROTECTED_PATHS } from "./lib/constants";
 
 export const config = {
   pages: {
@@ -73,18 +73,6 @@ export const config = {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async authorized({ request, auth }): Promise<any> {
-
-
-      const PROTECTED_PATHS = [
-        /\/shipping-address/,
-        /\/payment-method/,
-        /\/place-order/,
-        /\/profile/,
-        /\/user\/(.*)/,
-        /\/order\/(.*)/,
-        /\/admin/,
-      ];
-
       // Get pathname from request URL object
       const { pathname } = request.nextUrl;
 
