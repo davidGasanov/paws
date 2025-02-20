@@ -12,7 +12,7 @@ import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const metaData: Metadata = {
+export const metadata: Metadata = {
   title: "Orders",
 };
 

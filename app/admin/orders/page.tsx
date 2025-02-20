@@ -15,7 +15,7 @@ import Pagination from "@/components/shared/pagination";
 import { Button } from "@/components/ui/button";
 import DeleteDialog from "@/components/shared/delete-dialog";
 
-export const metaData: Metadata = {
+export const metadata: Metadata = {
   title: "Admin orders",
 };
 

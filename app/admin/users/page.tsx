@@ -15,7 +15,7 @@ import DeleteDialog from "@/components/shared/delete-dialog";
 import Pagination from "@/components/shared/pagination";
 import { Badge } from "@/components/ui/badge";
 
-export const metaData: Metadata = {
+export const metadata: Metadata = {
   title: "Admin users",
 };
 

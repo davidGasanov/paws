@@ -3,7 +3,7 @@ import { getProductById } from "@/lib/actions/product.actions";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-export const metaData: Metadata = {
+export const metadata: Metadata = {
   title: "Update product",
 };
 
