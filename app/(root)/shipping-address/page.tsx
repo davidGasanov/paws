@@ -6,7 +6,7 @@ import ShippingAddressForm from "./shipping-address-form";
 import { ShippingAddress } from "@/types";
 import CheckoutSteps from "@/components/shared/checkout-steps";
 
-export const metaData = {
+export const metadata = {
   title: "Shipping Address",
 };
 
