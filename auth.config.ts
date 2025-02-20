@@ -1,0 +1,37 @@
+import type { NextAuthConfig } from "next-auth";
+import { NextResponse } from "next/server";
+import { PROTECTED_PATHS } from "./lib/constants";
+
+export const authConfig = {
+  providers: [],
+  callbacks: {
+    async authorized({ request, auth }) {
+      // Get pathname from request URL object
+      const { pathname } = request.nextUrl;
+
+      // Check if user is not authenticated and accessing a protected path
+      if (!auth && PROTECTED_PATHS.some((p) => p.test(pathname))) return false;
+      if (!request.cookies.get("sessionCartId")) {
+        // Generate new session cart id cookie
+        const sessionCartId = crypto.randomUUID();
+
+        // Clone req headers
+        const newRequestHeaders = new Headers(request.headers);
+
+        // Create new response and add the new headers
+        const response = NextResponse.next({
+          request: {
+            headers: newRequestHeaders,
+          },
+        });
+
+        // Set newly generated sessionCartId in response cookies
+        response.cookies.set("sessionCartId", sessionCartId);
+
+        return response;
+      } else {
+        return true;
+      }
+    },
+  },
+} satisfies NextAuthConfig;

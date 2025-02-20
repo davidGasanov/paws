@@ -5,8 +5,7 @@ import type { NextAuthConfig } from "next-auth";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
-import { PROTECTED_PATHS } from "./lib/constants";
+import { authConfig } from "./auth.config";
 
 export const config = {
   pages: {
@@ -58,6 +57,7 @@ export const config = {
     }),
   ],
   callbacks: {
+    ...authConfig.callbacks,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async session({ session, user, trigger, token }: any) {
       session.user.id = token.sub || "";
@@ -69,36 +69,6 @@ export const config = {
       }
 
       return session;
-    },
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async authorized({ request, auth }): Promise<any> {
-      // Get pathname from request URL object
-      const { pathname } = request.nextUrl;
-
-      // Check if user is not authenticated and accessing a protected path
-      if (!auth && PROTECTED_PATHS.some((p) => p.test(pathname))) return false;
-      if (!request.cookies.get("sessionCartId")) {
-        // Generate new session cart id cookie
-        const sessionCartId = crypto.randomUUID();
-
-        // Clone req headers
-        const newRequestHeaders = new Headers(request.headers);
-
-        // Create new response and add the new headers
-        const response = NextResponse.next({
-          request: {
-            headers: newRequestHeaders,
-          },
-        });
-
-        // Set newly generated sessionCartId in response cookies
-        response.cookies.set("sessionCartId", sessionCartId);
-
-        return response;
-      } else {
-        return true;
-      }
     },
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
