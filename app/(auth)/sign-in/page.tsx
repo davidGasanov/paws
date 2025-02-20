@@ -13,7 +13,7 @@ import CredentialsSignInForm from "./credentials-signin-form";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
-export const metaData: Metadata = {
+export const metadata: Metadata = {
   title: "Sign in",
   description: "Sign in to your account",
 };
