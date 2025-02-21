@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/db/prisma";
-import { CartItem, PaymentResult } from "@/types";
+import { CartItem, PaymentResult, ShippingAddress } from "@/types";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { convertToPlainObject, formatError } from "../utils";
 import { insertOrderSchema } from "../validators";
@@ -12,6 +12,7 @@ import { paypal } from "../paypal";
 import { revalidatePath } from "next/cache";
 import { PAGE_SIZE } from "../constants";
 import { Prisma } from "@prisma/client";
+import { sendPurchaseReceipt } from "@/email";
 
 export async function createOrder() {
   try {
@@ -224,6 +225,15 @@ export async function updateOrderToPaid({
     const updatedOrder = await getOrderById(orderId);
 
     if (!updatedOrder) throw new Error("Updated order not found");
+
+    sendPurchaseReceipt({
+      order: {
+        ...updatedOrder,
+        shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
+        paymentResult: updatedOrder.paymentResult as PaymentResult,
+      },
+    });
+
     return { success: true, message: "Order updated to paid succesfully" };
   } catch (error) {
     return { success: false, message: formatError(error) };

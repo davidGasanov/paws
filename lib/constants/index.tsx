@@ -103,3 +103,5 @@ export const REVIEW_DEFAULT_VALUES = {
   comment: "",
   rating: 0,
 };
+
+export const sender_email = process.env.SENDER_EMAIL || "onboarding@resend.dev";
