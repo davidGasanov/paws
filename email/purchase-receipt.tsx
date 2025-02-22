@@ -89,7 +89,9 @@ export default function PurchaseReceiptEmail({ order }: OrderInformationTypes) {
                     Purchase Date
                   </Text>
                   <Text className="mt-0 mr-4">
-                    {dateFormatter.format(order.createdAt)}
+                    {order.createdAt
+                      ? dateFormatter.format(new Date(order.createdAt))
+                      : "Invalid Date"}
                   </Text>
                 </Column>
                 <Column>
@@ -106,6 +108,7 @@ export default function PurchaseReceiptEmail({ order }: OrderInformationTypes) {
               {order.orderitems.map((item) => (
                 <Row key={item.productId} className="mt-8">
                   <Column className="w-20">
+                  Image URL: {`${process.env.NEXT_PUBLIC_SERVER_URL}${item.image}`}
                     <Img
                       width="80"
                       alt={item.name}

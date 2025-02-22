@@ -5,6 +5,8 @@ import OrderDetailsTable from "./order-details-table";
 import { ShippingAddress } from "@/types";
 import { auth } from "@/auth";
 import Stripe from "stripe";
+import { Button } from "@/components/ui/button";
+import { sendPurchaseReceipt } from "@/email";
 
 export const metadata: Metadata = {
   title: "Order details",
@@ -29,6 +31,8 @@ const OrderDetailsPage = async (props: { params: Promise<{ id: string }> }) => {
     client_secret = paymentIntent.client_secret;
   }
   if (!order) notFound();
+  console.log("order: ", order);
+
 
   return (
     <>
@@ -41,6 +45,31 @@ const OrderDetailsPage = async (props: { params: Promise<{ id: string }> }) => {
           shippingAddress: order.shippingAddress as ShippingAddress,
         }}
       />
+      <Button
+        onClick={async () => {
+          "use server";
+          sendPurchaseReceipt({
+            order: {
+              ...order,
+              shippingAddress: {
+                fullName: "John Doe",
+                streetAddress: "123 Main st",
+                city: "New York",
+                postalCode: "10001",
+                country: "US",
+              },
+              paymentResult: {
+                id: "123",
+                status: "succeeded",
+                pricePaid: "100",
+                email_address: "test@test.com",
+              },
+            },
+          });
+        }}
+      >
+        Send test email
+      </Button>
     </>
   );
 };

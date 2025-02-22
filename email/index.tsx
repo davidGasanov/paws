@@ -12,10 +12,32 @@ export const sendPurchaseReceipt = async ({
 }: {
   order: OrderSchema;
 }) => {
-  await resend.emails.send({
-    from: `${APP_NAME} <${sender_email}>`,
-    to: order.user.email,
-    subject: `Order confirmation ${order.id}`,
-    react: <PurchaseReceiptEmail order={order} />,
-  });
+  try {
+    console.log("sending email to: ", order.user.email);
+    await resend.emails.send({
+      from: `${APP_NAME} <${sender_email}>`,
+      to: order.user.email,
+      subject: `Order confirmation ${order.id}`,
+      react: <PurchaseReceiptEmail order={order} />,
+    });
+    console.log("Email sent!");
+  } catch (error) {
+    console.log("Email not sent!");
+    console.error(error);
+  }
+};
+
+export const sendTestEmail = async () => {
+  try {
+    await resend.emails.send({
+      from: `${APP_NAME} <${sender_email}>`,
+      to: "tansacal@protonmail.com",
+      subject: "Email test",
+      react: <>Test email body</>,
+    });
+    console.log("Email sent!");
+  } catch (error) {
+    console.log("Email not sent!");
+    console.error(error);
+  }
 };
