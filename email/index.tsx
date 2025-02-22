@@ -13,7 +13,6 @@ export const sendPurchaseReceipt = async ({
   order: OrderSchema;
 }) => {
   try {
-    console.log("sending email to: ", order.user.email);
     await resend.emails.send({
       from: `${APP_NAME} <${sender_email}>`,
       to: order.user.email,

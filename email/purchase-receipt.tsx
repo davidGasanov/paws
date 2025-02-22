@@ -108,7 +108,6 @@ export default function PurchaseReceiptEmail({ order }: OrderInformationTypes) {
               {order.orderitems.map((item) => (
                 <Row key={item.productId} className="mt-8">
                   <Column className="w-20">
-                  Image URL: {`${process.env.NEXT_PUBLIC_SERVER_URL}${item.image}`}
                     <Img
                       width="80"
                       alt={item.name}
