@@ -14,6 +14,7 @@ import { BadgeDollarSign, CreditCard, Users } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import Charts from "./chart";
+import { requireAdmin } from "@/lib/auth-guard";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard",
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
 
 const AdminOverviewPage = async () => {
   const session = await auth();
+  await requireAdmin();
 
   const summary = await getOrderSummary();
   console.log(summary);

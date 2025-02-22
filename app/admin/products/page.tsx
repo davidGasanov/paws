@@ -12,11 +12,14 @@ import {
 import { formatCurrency, formatId } from "@/lib/utils";
 import Pagination from "@/components/shared/pagination";
 import DeleteDialog from "@/components/shared/delete-dialog";
+import { requireAdmin } from "@/lib/auth-guard";
 
 const AdminProductsPage = async (props: {
   searchParams: Promise<{ page: string; query: string; category: string }>;
 }) => {
   const searchParams = await props.searchParams;
+    await requireAdmin();
+
 
   const page = Number(searchParams.page) || 1;
   const searchText = searchParams.query || "";
