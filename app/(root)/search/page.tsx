@@ -1,15 +1,22 @@
 import ProductCard from "@/components/shared/product/product-card";
-import {
-  getAllCategories,
-  getAllProducts,
-} from "@/lib/actions/product.actions";
+import { getAllProducts } from "@/lib/actions/product.actions";
 import Link from "next/link";
 import { SEARCH_FILTERS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
+import { getAllCategories } from "@/lib/actions/category.actions";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { capitalizeFirstLetter } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { XIcon } from "lucide-react";
 
 interface SearchParams {
-  category?: string;
-  q?: string;
+  categoryId?: string;
+  query?: string;
   price?: string;
   rating?: string;
   sort?: string;
@@ -20,22 +27,22 @@ export async function generateMetadata(props: {
   searchParams: Promise<SearchParams>;
 }) {
   const {
-    category = "all",
-    q = "all",
+    categoryId = "all",
+    query = "all",
     price = "all",
     rating = "all",
   } = await props.searchParams;
 
-  const isQuerySet = q && q !== "all" && q.trim() !== "";
+  const isQuerySet = query && query !== "all" && query.trim() !== "";
   const isCategorySet =
-    category && category !== "all" && category.trim() !== "";
+    categoryId && categoryId !== "all" && categoryId.trim() !== "";
   const isPriceSet = price && price !== "all" && price.trim() !== "";
   const isRatingSet = rating && rating !== "all" && rating.trim() !== "";
 
   if (isQuerySet || isCategorySet || isPriceSet || isRatingSet) {
     return {
-      title: `Search ${isQuerySet ? `${q}` : ""} ${
-        isCategorySet ? `in ${category}` : ""
+      title: `Search ${isQuerySet ? `${query}` : ""} ${
+        isCategorySet ? `in ${categoryId}` : ""
       } ${isPriceSet ? `priced ${price}` : ""} ${
         isRatingSet ? `rated ${rating} stars & up` : ""
       }`,
@@ -49,8 +56,8 @@ export async function generateMetadata(props: {
 
 const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
   const {
-    category = "all",
-    q = "all",
+    categoryId = "",
+    query = "all",
     price = "all",
     rating = "all",
     sort = "newest",
@@ -60,8 +67,8 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
   const { prices, ratings, sortOrders } = SEARCH_FILTERS;
 
   const products = await getAllProducts({
-    category,
-    query: q,
+    categoryId,
+    query,
     price,
     rating,
     sort,
@@ -72,70 +79,132 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
   const getFilterUrl = ({
     c,
     s,
+    q,
     p,
     r,
     pg,
   }: {
     c?: string;
     s?: string;
+    q?: string;
     p?: string;
     r?: string;
     pg?: string;
   }) => {
-    const params = {
-      q,
-      category,
+    const params: SearchParams = {
+      query,
+      categoryId,
       price,
       rating,
       sort,
       page,
     };
 
-    if (c) params.category = c;
+    if (c) params.categoryId = c;
     if (s) params.sort = s;
     if (p) params.price = p;
     if (r) params.rating = r;
     if (pg) params.page = pg;
+    if (q) params.query = q;
 
-    return `/search?${new URLSearchParams(params).toString()}`;
+    const searchParams = Object.fromEntries(
+      Object.entries(params).map(([key, value]) => [key, value.toString()])
+    );
+    return `/search?${new URLSearchParams(searchParams).toString()}`;
   };
 
-  const allCategories = await getAllCategories();
+  const mainCategories = await getAllCategories({
+    primariesOnly: true,
+    excludeAll: true,
+  });
+
+  console.log("main categories before update: ", mainCategories);
+
+  for (const category of mainCategories) {
+    let subcategoryProductCount = 0;
+    if (category.subcategories) {
+      for (const subcategory of category?.subcategories) {
+        subcategoryProductCount += subcategory._count?.products || 0;
+      }
+      if (category._count?.products !== undefined)
+        category._count.products += subcategoryProductCount;
+    }
+  }
+
+  console.log("main categories after update: ", mainCategories);
+  const allCategories = await getAllCategories({
+    primariesOnly: false,
+    excludeAll: true,
+  });
+
+  const getCategoryName = () => {
+    return allCategories.find((category) => category.id === categoryId)?.name;
+  };
 
   return (
     <div className="grid md:grid-cols-5 md:gap-5">
       <div className="filter-links">
-        <div className="text-xl mb-2 mt-3">Department</div>
+        <div className="text-xl mb-4 mt-3">Department</div>
         <ul className="space-y-1">
           <li>
             <Link
-              className={`${
-                (category === "all" || category === "") && "font-bold"
-              }`}
+              className={`${categoryId === "" && "font-bold text-secondary-foreground"}`}
               href={getFilterUrl({ c: "all" })}
             >
               Any
             </Link>
           </li>
-          {allCategories.map((x) => (
-            <li key={x.category}>
-              <Link
-                className={`${category === x.category && "font-bold"}`}
-                href={getFilterUrl({
-                  c: x.category,
-                })}
-              >
-                {x.category}
-              </Link>
-            </li>
-          ))}
+          <Accordion type="single" collapsible>
+            {mainCategories.map((x) => {
+              return (
+                <AccordionItem key={x.id} className="border-b" value={x.id}>
+                  <AccordionTrigger className="py-1 font-semibold opacity-65 hover:opacity-100">
+                    <span className="flex items-center justify-start">
+                      <span className="w-12 block text-left">
+                        {capitalizeFirstLetter(x.name)}{" "}
+                      </span>
+                      <span className="font-medium text-[14px] opacity-80">
+                        ({x?._count?.products})
+                      </span>
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-2">
+                    <div className="pl-2 flex flex-col gap-2">
+                      <li key={x.id}>
+                        <Link
+                          className={`${categoryId === x.id && "font-bold opacity-100"} opacity-[0.68] hover:opacity-100`}
+                          href={getFilterUrl({
+                            c: x.id,
+                          })}
+                        >
+                          All
+                        </Link>
+                      </li>
+                      {x?.subcategories?.map((sub) => (
+                        <li key={sub.id}>
+                          <Link
+                            className={`${categoryId === sub.id && "font-bold opacity-100"} opacity-[0.68] hover:opacity-100`}
+                            href={getFilterUrl({
+                              c: sub.id,
+                            })}
+                          >
+                            {capitalizeFirstLetter(sub.name)}
+                          </Link>
+                        </li>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
         </ul>
 
-        <div className="text-xl mb-2 mt-3">Price</div>
+        <div className="text-xl mb-2 mt-8">Price</div>
         <ul className="space-y-1">
           <li>
             <Link
-              className={`${price === "all" && "font-bold"}`}
+              className={`${price === "all" && "font-bold opacity-100"} opacity-[0.68] hover:opacity-100`}
               href={getFilterUrl({ p: "all" })}
             >
               Any
@@ -144,7 +213,7 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
           {prices.map((p) => (
             <li key={p.value}>
               <Link
-                className={`${price === p.value && "font-bold"}`}
+                className={`${price === p.value && "font-bold opacity-100"} opacity-[0.68] hover:opacity-100`}
                 href={getFilterUrl({
                   p: p.value,
                 })}
@@ -155,11 +224,11 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
           ))}
         </ul>
 
-        <div className="text-xl mb-2 mt-3">Customer ratings</div>
+        <div className="text-xl mb-2 mt-8">Customer ratings</div>
         <ul className="space-y-1">
           <li>
             <Link
-              className={`${rating === "all" && "font-bold"}`}
+              className={`${rating === "all" && "font-bold opacity-100"} opacity-[0.68] hover:opacity-100`}
               href={getFilterUrl({ r: "all" })}
             >
               Any
@@ -168,7 +237,7 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
           {ratings.map((r) => (
             <li key={r}>
               <Link
-                className={`${rating === r.toString() && "font-bold"}`}
+                className={`${rating === r.toString() && "font-bold opacity-100"} opacity-[0.68] hover:opacity-100`}
                 href={getFilterUrl({
                   r: r.toString(),
                 })}
@@ -181,20 +250,46 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
       </div>
       <div className="space-y-4 md:col-span-4">
         <div className="flex-between flex-col my-4 md:flex-row">
-          <div className="flex items-center">
-            {q !== "all" && q !== "" && `Query: ` + q + ";"}{" "}
-            {category !== "all" &&
-              category !== "" &&
-              `Category: ` + category + ";"}{" "}
-            {price !== "all" && "Price: " + price + ";"}{" "}
-            {rating !== "all" && "Rating: " + rating + "Stars & up;"}
+          <div className="flex items-center gap-2">
+            {query !== "all" && query !== "" && (
+              <Badge className="p-2" variant={"secondary"}>
+                {`Query: ` + query}
+                <Link href={getFilterUrl({ q: "all" })}>
+                  <XIcon className="opacity-90 ml-1 cursor-pointer" size={16} />
+                </Link>
+              </Badge>
+            )}{" "}
+            {categoryId !== "" && categoryId !== "all" && (
+              <Badge className="p-2" variant={"secondary"}>
+                {`Category: ` + getCategoryName()}
+                <Link href={getFilterUrl({ c: "all" })}>
+                  <XIcon className="opacity-90 ml-1 cursor-pointer" size={16} />
+                </Link>
+              </Badge>
+            )}
+            {price !== "all" && (
+              <Badge className="p-2" variant={"secondary"}>
+                {"Price: " + price}
+                <Link href={getFilterUrl({ p: "all" })}>
+                  <XIcon className="opacity-90 ml-1 cursor-pointer" size={16} />
+                </Link>
+              </Badge>
+            )}
+            {rating !== "all" && (
+              <Badge className="p-2" variant={"secondary"}>
+                {"Rating: " + rating + " Stars & up"}
+                <Link href={getFilterUrl({ r: "all" })}>
+                  <XIcon className="opacity-90 ml-1 cursor-pointer" size={16} />
+                </Link>
+              </Badge>
+            )}
             &nbsp;
-            {(q !== "all" && q !== "") ||
-            (category !== "all" && category !== "") ||
+            {(query !== "all" && query !== "") ||
+            categoryId !== "" ||
             (price !== "all" && price !== "") ||
             (rating !== "all" && rating !== "") ? (
               <Button variant="link" asChild>
-                <Link href="/search">Clear</Link>
+                <Link href="/search">Clear all</Link>
               </Button>
             ) : null}
           </div>

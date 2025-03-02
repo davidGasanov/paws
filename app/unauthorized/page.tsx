@@ -8,16 +8,17 @@ export const metadata: Metadata = {
 
 const Unauthorized = () => {
   return (
-    <div className="container space-y-4 h-[calc(100vh-200px)] mx-auto flex 
-    flex-col items-center justify-center">
-        <h1 className="h1-bold text-4xl">Unauthorized Access</h1>
-        <p className="text-muted-foreground">
-          You do not have permission to access this page
-        </p>
-        <Button asChild>
-          <Link href="/">Return home</Link>
-        </Button>
-      
+    <div
+      className="container space-y-4 h-[calc(100vh-200px)] mx-auto flex 
+    flex-col items-center justify-center"
+    >
+      <h1 className="h1-bold text-4xl">Unauthorized Access</h1>
+      <p className="text-muted-foreground">
+        You do not have permission to access this page
+      </p>
+      <Button asChild>
+        <Link href="/">Return home</Link>
+      </Button>
     </div>
   );
 };

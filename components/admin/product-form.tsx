@@ -2,7 +2,7 @@
 
 import { PRODUCT_DEFAULT_VALUES } from "@/lib/constants";
 import { insertProductSchema, updateProductSchema } from "@/lib/validators";
-import { Product } from "@/types";
+import { Category, Product } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ControllerRenderProps, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,6 +26,16 @@ import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
 import { UploadButton } from "@/lib/uploadthing";
 import { Checkbox } from "../ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { getAllCategories } from "@/lib/actions/category.actions";
+import { useEffect, useState } from "react";
+import { capitalizeFirstLetter } from "@/lib/utils";
 
 const ProductForm = ({
   type,
@@ -36,6 +46,21 @@ const ProductForm = ({
   product?: Product;
   productId?: string;
 }) => {
+  const [allCategories, setAllCategories] = useState<Category[]>([]);
+
+  const handleGetAllCategories = async () => {
+    const res = await getAllCategories({ excludeAll: true });
+    if (res) {
+      setAllCategories(res as Category[]);
+    }
+  };
+
+  useEffect(() => {
+    if (!allCategories.length) {
+      handleGetAllCategories();
+    }
+  }, []);
+
   const form = useForm<z.infer<typeof insertProductSchema>>({
     resolver: zodResolver(
       type === "Update" ? updateProductSchema : insertProductSchema
@@ -67,7 +92,6 @@ const ProductForm = ({
     }
 
     // On update
-
     if (type === "Update") {
       if (!productId) {
         router.push("/admin/products");
@@ -160,26 +184,6 @@ const ProductForm = ({
         <InputWrapper>
           <FormField
             control={form.control}
-            name="category"
-            render={({
-              field,
-            }: {
-              field: ControllerRenderProps<
-                z.infer<typeof insertProductSchema>,
-                "category"
-              >;
-            }) => (
-              <FormItem className="w-full">
-                <FormLabel>Category</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter product category" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="brand"
             render={({
               field,
@@ -192,8 +196,44 @@ const ProductForm = ({
               <FormItem className="w-full">
                 <FormLabel>Brand</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter product brand" {...field} />
+                  <Input placeholder="Enter product category" {...field} />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="categoryId"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Category</FormLabel>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {allCategories.map((category) => (
+                      <SelectItem value={category.id} key={category.id}>
+                        {category.name}{" "}
+                        {category?.parentId && (
+                          <span className="opacity-65">
+                            (
+                            {capitalizeFirstLetter(
+                              allCategories.find(
+                                (c) => c.id === category.parentId
+                              )?.name || ""
+                            )}
+                            )
+                          </span>
+                        )}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
                 <FormMessage />
               </FormItem>
             )}

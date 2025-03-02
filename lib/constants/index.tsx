@@ -1,4 +1,4 @@
-export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Prostore";
+export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || "Paws";
 export const APP_DESCRIPTION =
   process.env.NEXT_PUBLIC_APP_DESCRIPTION || "A modern ecommerce store";
 export const SERVER_URL =
@@ -55,7 +55,7 @@ export const PAGE_SIZE = Number(process.env.PAGE_SIZE) || 10;
 export const PRODUCT_DEFAULT_VALUES = {
   name: "",
   slug: "",
-  category: "",
+  categoryId: "",
   images: [],
   brand: "",
   description: "",

@@ -49,3 +49,15 @@ export type Review = z.infer<typeof insertReviewSchema> & {
     name: string;
   };
 };
+
+export type Category = {
+  id: string;
+  name: string;
+  subcategories?: Category[];
+  parent?: Category | null;
+  parentId: string | null;
+  products?: Product[];
+  _count?: {
+    products: number
+  }
+};

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const AdminProductUpdatePage = async (props: {
   params: Promise<{ id: string }>;
 }) => {
-    await requireAdmin();
+  await requireAdmin();
 
   const { id } = await props.params;
 

@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { insertProductSchema, updateProductSchema } from "../validators";
 import { Prisma } from "@prisma/client";
+import { getAllSubcategoriesById } from "./category.actions";
 
 // Get latest products
 export async function getLatestProducts() {
@@ -25,6 +26,13 @@ export async function getProductBySlug(slug: string) {
     where: {
       slug,
     },
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
   return convertToPlainObject(product);
 }
@@ -35,6 +43,13 @@ export async function getProductById(productId: string) {
     where: {
       id: productId,
     },
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
   return convertToPlainObject(data);
 }
@@ -44,7 +59,7 @@ export async function getAllProducts({
   limit = PAGE_SIZE,
   page,
   query,
-  category,
+  categoryId,
   price,
   rating,
   sort,
@@ -52,7 +67,7 @@ export async function getAllProducts({
   limit?: number;
   page: number;
   query: string;
-  category?: string;
+  categoryId?: string;
   price?: string;
   rating?: string;
   sort?: string;
@@ -67,12 +82,15 @@ export async function getAllProducts({
         }
       : {};
 
-  const categoryFilter =
-    category && category !== "all"
-      ? {
-          category,
-        }
-      : {};
+  let categoryFilter = {};
+  if (categoryId && categoryId !== "all") {
+    const allCategoryIds = await getAllSubcategoriesById(categoryId);
+    allCategoryIds.push(categoryId); // Include the parent category itself
+    console.log("all categoryids: ", allCategoryIds);
+    categoryFilter = {
+      categoryId: { in: allCategoryIds },
+    };
+  }
 
   const priceFilter: Prisma.ProductWhereInput =
     price && price !== "all"
@@ -99,14 +117,15 @@ export async function getAllProducts({
         sort === "lowest"
           ? { price: "asc" }
           : sort === "highest"
-          ? { price: "desc" }
-          : sort === "rating"
-          ? {
-              rating: "desc",
-            }
-          : { createdAt: "desc" },
+            ? { price: "desc" }
+            : sort === "rating"
+              ? {
+                  rating: "desc",
+                }
+              : { createdAt: "desc" },
       take: limit,
       skip: (page - 1) * limit,
+      include: { category: { select: { name: true, parent: true } } },
       where: {
         ...queryFilter,
         ...categoryFilter,
@@ -173,7 +192,7 @@ export async function updateProduct(data: z.infer<typeof updateProductSchema>) {
 
     await prisma.product.update({
       where: { id: product.id },
-      data: product,
+      data: { ...product },
     });
 
     revalidatePath("/admin/products");
@@ -181,16 +200,6 @@ export async function updateProduct(data: z.infer<typeof updateProductSchema>) {
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
-}
-
-// Get all categories
-export async function getAllCategories() {
-  const data = await prisma.product.groupBy({
-    by: ["category"],
-    _count: true,
-  });
-
-  return data;
 }
 
 // Get featured products

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 import { PAYMENT_METHODS } from "./constants";
+import { Category } from "@/types";
 
 const currency = z
   .string()
@@ -9,8 +10,16 @@ const currency = z
     "Price must have exactly 2 decimal places"
   );
 
-// Schema for inserting products
+export const insertCategorySchema: z.ZodType<Category> = z.lazy(() =>
+  z.object({
+    id: z.string(),
+    parentId: z.string().nullable(),
+    name: z.string().min(3, "Name must be at least 3 characters"),
+    subcategories: z.array(insertCategorySchema),
+  })
+);
 
+// Schema for inserting products
 export const insertProductSchema = z.object({
   name: z
     .string()
@@ -20,7 +29,7 @@ export const insertProductSchema = z.object({
     .string()
     .min(3, "Slug must be at least 3 characters")
     .max(255, "Slug must be at most 255 characters"),
-  category: z.string().min(3, "Category must be at least 3 characters"),
+  categoryId: z.string().min(3, "Category Id be at least 3 characters"),
   brand: z.string().min(3, "Brand must be at least 3 characters"),
   description: z.string().min(3, "Description must be at least 3 characters"),
   stock: z.coerce.number(),
@@ -31,7 +40,6 @@ export const insertProductSchema = z.object({
 });
 
 // Schema for updating existing products
-
 export const updateProductSchema = insertProductSchema.extend({
   id: z.string().min(1, "ID is required"),
 });

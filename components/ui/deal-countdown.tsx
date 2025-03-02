@@ -11,14 +11,6 @@ const TARGET_DATE = new Date("2025-03-10T00:00:00");
 const calculateTimeRemaining = (targetDate: Date) => {
   const currentTime = new Date();
   const timeDifference = Math.max(Number(targetDate) - Number(currentTime), 0);
-  console.log(
-    "time difference: ",
-    timeDifference,
-    "current time: ",
-    currentTime,
-    "target date: ",
-    targetDate
-  );
   return {
     days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
     hours: Math.floor(

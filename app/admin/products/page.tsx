@@ -15,20 +15,19 @@ import DeleteDialog from "@/components/shared/delete-dialog";
 import { requireAdmin } from "@/lib/auth-guard";
 
 const AdminProductsPage = async (props: {
-  searchParams: Promise<{ page: string; query: string; category: string }>;
+  searchParams: Promise<{ page: string; query: string; categoryId: string }>;
 }) => {
   const searchParams = await props.searchParams;
-    await requireAdmin();
-
+  await requireAdmin();
 
   const page = Number(searchParams.page) || 1;
   const searchText = searchParams.query || "";
-  const category = searchParams.category || "";
+  const categoryId = searchParams.categoryId || "";
 
   const products = await getAllProducts({
     query: searchText,
     limit: 5,
-    category,
+    categoryId,
     page,
   });
 
@@ -73,7 +72,9 @@ const AdminProductsPage = async (props: {
                 <TableCell className="text-right">
                   {formatCurrency(product.price)}
                 </TableCell>
-                <TableCell>{product.category}</TableCell>
+                <TableCell>
+                  {product.category.name} {product.category.parent?.name}
+                </TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>{product.rating}</TableCell>
                 <TableCell className="flex gap-1">
