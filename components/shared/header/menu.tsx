@@ -16,9 +16,9 @@ const Menu = () => {
     <div className="flex justify-end gap-3">
       <nav className="hidden md:flex w-full max-w-xs gap-1">
         <ModeToggle />
-        <Button asChild variant="ghost">
-          <Link href="/cart">
-            <ShoppingCart /> Cart
+        <Button asChild variant="ghost" className="bg-none hover:bg-primary hover:text-[#FFF]">
+          <Link href="/cart" className="text-[#FFF]">
+            <ShoppingCart color="#FFF" /> Cart
           </Link>
         </Button>
         <UserButton />

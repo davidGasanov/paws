@@ -10,9 +10,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { capitalizeFirstLetter } from "@/lib/utils";
+import { capitalizeFirstLetter, cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { XIcon } from "lucide-react";
+import { FileQuestion, XIcon } from "lucide-react";
 
 interface SearchParams {
   categoryId?: string;
@@ -118,7 +118,11 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
     excludeAll: true,
   });
 
-  console.log("main categories before update: ", mainCategories);
+  const collapsedMainCategory =
+    mainCategories.find((mainCat) => {
+      return mainCat?.subcategories?.some((subCat) => subCat.id === categoryId);
+    }) || mainCategories.find((mainCat) => mainCat.id === categoryId);
+  console.log(collapsedMainCategory);
 
   for (const category of mainCategories) {
     let subcategoryProductCount = 0;
@@ -148,31 +152,49 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
         <ul className="space-y-1">
           <li>
             <Link
-              className={`${categoryId === "" && "font-bold text-secondary-foreground"}`}
+              className={cn("font-semibold opacity-70", {
+                "font-bold opacity-100":
+                  categoryId === "" || categoryId === "all",
+              })}
               href={getFilterUrl({ c: "all" })}
             >
               Any
             </Link>
           </li>
-          <Accordion type="single" collapsible>
+          <Accordion
+            type="single"
+            collapsible
+            defaultValue={collapsedMainCategory?.id}
+          >
             {mainCategories.map((x) => {
               return (
                 <AccordionItem key={x.id} className="border-b" value={x.id}>
-                  <AccordionTrigger className="py-1 font-semibold opacity-65 hover:opacity-100">
-                    <span className="flex items-center justify-start">
+                  <AccordionTrigger
+                    className={cn(
+                      `py-1 font-semibold opacity-65 hover:opacity-100`,
+                      {
+                        "opacity-100 font-bold":
+                          categoryId === x.id ||
+                          collapsedMainCategory?.id === x.id,
+                      }
+                    )}
+                  >
+                    <span className="flex items-center justify-start group">
                       <span className="w-12 block text-left">
                         {capitalizeFirstLetter(x.name)}{" "}
                       </span>
-                      <span className="font-medium text-[14px] opacity-80">
+                      <span className="font-medium text-[14px] opacity-80 group-hover:no-underline hover:decoration-none">
                         ({x?._count?.products})
                       </span>
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="pt-2">
-                    <div className="pl-2 flex flex-col gap-2">
+                    <div className="pl-2 flex flex-col gap-1">
                       <li key={x.id}>
                         <Link
-                          className={`${categoryId === x.id && "font-bold opacity-100"} opacity-[0.68] hover:opacity-100`}
+                          className={cn("opacity-[0.68] hover:opacity-100", {
+                            "font-bold opacity-100": categoryId === x.id,
+                          })}
                           href={getFilterUrl({
                             c: x.id,
                           })}
@@ -183,7 +205,9 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
                       {x?.subcategories?.map((sub) => (
                         <li key={sub.id}>
                           <Link
-                            className={`${categoryId === sub.id && "font-bold opacity-100"} opacity-[0.68] hover:opacity-100`}
+                            className={cn("opacity-[0.68] hover:opacity-100", {
+                              "font-bold opacity-100": categoryId === sub.id,
+                            })}
                             href={getFilterUrl({
                               c: sub.id,
                             })}
@@ -249,7 +273,7 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
         </ul>
       </div>
       <div className="space-y-4 md:col-span-4">
-        <div className="flex-between flex-col my-4 md:flex-row">
+        <div className="flex-wrap flex flex-col gap-2 my-4 md:flex-between md:flex-row">
           <div className="flex items-center gap-2">
             {query !== "all" && query !== "" && (
               <Badge className="p-2" variant={"secondary"}>
@@ -293,25 +317,37 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
               </Button>
             ) : null}
           </div>
-          <div>
-            Sort by{" "}
-            {sortOrders.map((s) => (
-              <Link
-                key={s}
-                href={getFilterUrl({ s })}
-                className={`mx-2 ${sort == s && "font-bold"}`}
-              >
-                {s}
-              </Link>
-            ))}{" "}
+          <div className="flex">
+            <span className="font-semibold"> Sort by:</span>{" "}
+            <div className="flex gap-1 ml-3">
+              {sortOrders.map((s) => (
+                <Link
+                  key={s}
+                  href={getFilterUrl({ s })}
+                  className={`mx-1 ${sort == s && "font-bold"}`}
+                >
+                  {s}
+                </Link>
+              ))}{" "}
+            </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          {!products?.data?.length && <div>No products found</div>}
-          {products.data?.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {!products?.data?.length ? (
+          <div className="w-full h-full">
+            <div className="flex flex-col items-center gap-4 mt-12">
+              <FileQuestion size={120} className="opacity-45" strokeWidth={2} />
+              <span className="font-semibold opacity-65">
+                No products found
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {products.data?.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

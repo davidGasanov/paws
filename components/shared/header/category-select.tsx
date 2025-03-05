@@ -5,9 +5,8 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
-import { capitalizeFirstLetter } from "@/lib/utils";
+import { capitalizeFirstLetter, cn } from "@/lib/utils";
 import { Category } from "@/types";
 import { ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -16,19 +15,25 @@ const CategorySelect = ({ category }: { category: Category }) => {
   const router = useRouter();
 
   return (
-    <Select value={""} onValueChange={(value) => router.push(`/search?categoryId=${value}`)}>
+    <Select
+      value={""}
+      onValueChange={(value) => router.push(`/search?categoryId=${value}`)}
+    >
       <SelectTrigger
-        className="w-[150px] text-left focus:ring-0 
+        className="w-[80px] text-left focus:ring-0 
       focus:ring-offset-0 bg-transparent group rounded-none 
-      border outline-none transition-all duration-200
+       outline-none transition-all duration-200 group
       border-t-transparent border-l-transparent border-r-transparent border-b-transparent 
-      data-[state=open]:border-b-primary relative"
+      relative"
       >
-        <SelectValue placeholder={capitalizeFirstLetter(category.name)} />
-
+        <span
+          className={cn("font-semibold opacity-70 group-hover:opacity-100")}
+        >
+          {capitalizeFirstLetter(category.name)}
+        </span>
         <ChevronDown
           className={`h-4 w-4 opacity-50 transition-transform 
-            duration-200 ease-in-out group-data-[state=open]:rotate-180`}
+            duration-200 ease-in-out group-data-[state=open]:rotate-180 group-hover:opacity-100`}
         />
       </SelectTrigger>
       <SelectContent>

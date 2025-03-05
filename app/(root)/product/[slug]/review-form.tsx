@@ -34,7 +34,7 @@ import {
 import { REVIEW_DEFAULT_VALUES } from "@/lib/constants";
 import { insertReviewSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { StarIcon } from "lucide-react";
+import { Pencil, StarIcon } from "lucide-react";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -100,8 +100,11 @@ const ReviewForm = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Button onClick={handleOpenForm} variant="default">
-        Write a review
+      <Button onClick={handleOpenForm} variant="default" asChild>
+        <div className="cursor-pointer my-4">
+          <Pencil />
+          Write a review
+        </div>
       </Button>
       <DialogContent className="sm:max-w-[425px] md:max-w-[750px]">
         <Form {...form}>

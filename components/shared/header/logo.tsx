@@ -21,7 +21,8 @@ const Logo = () => {
   return (
     <Link href="/" className="flex-start ml-4">
       <Image
-        src={`/images/${theme === "light" ? "logo-dark" : "logo"}.svg`}
+        // src={`/images/${theme === "light" ? "logo-dark" : "logo"}.svg`}
+        src={`/images/logo.svg`}
         alt={`${APP_NAME} logo`}
         priority
         height={88}

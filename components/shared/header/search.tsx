@@ -12,7 +12,7 @@ const Search = async () => {
           placeholder="Search..."
           className="md:w-[100px] lg:w-[250px]"
         />
-        <Button>
+        <Button variant="secondary">
           <SearchIcon />
         </Button>
       </div>

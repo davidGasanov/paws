@@ -17,10 +17,10 @@ const PaymentMethodPage = async () => {
   const user = await getUserById(userId);
 
   return (
-    <>
+    <div className="min-h-screen">
       <CheckoutSteps current={2} />
       <PaymentMethodForm preferredPaymentMethod={user.paymentMethod} />
-    </>
+    </div>
   );
 };
 

@@ -9,6 +9,7 @@ import { getProductBySlug } from "@/lib/actions/product.actions";
 import { notFound } from "next/navigation";
 import ReviewList from "./review-list";
 import Rating from "@/components/shared/product/rating";
+import { Separator } from "@/components/ui/separator";
 
 const ProductDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
@@ -90,8 +91,9 @@ const ProductDetailsPage = async (props: {
           </div>
         </div>
       </section>
+      <Separator className="mt-4" />
       <section className="mt-10">
-        <h2 className="h2-bold">Customer Reviews</h2>
+        <h2 className="h3-bold">Customer Reviews</h2>
         <ReviewList
           userId={userId || ""}
           productId={product.id}

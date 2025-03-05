@@ -43,7 +43,7 @@ const PlaceOrderPage = async () => {
   return (
     <>
       <CheckoutSteps current={3} />
-      <h1 className="py-4 text-2xl">Place Order</h1>
+      <h1 className="py-4 text-2xl h2-bold">Place Order</h1>
       <div className="grid md:grid-cols-3 md:gap-5">
         <div className="md:col-span-2 overflow-x-auto space-y-4">
           <Card>
@@ -82,7 +82,7 @@ const PlaceOrderPage = async () => {
                   <TableRow>
                     <TableHead>Item</TableHead>
                     <TableHead>Quantity</TableHead>
-                    <TableHead>Price</TableHead>
+                    <TableHead className="text-right">Price</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -105,7 +105,7 @@ const PlaceOrderPage = async () => {
                       <TableCell>
                         <span className="px-2">{item.qty}</span>
                       </TableCell>
-                      <TableCell className="text-right">{item.price}</TableCell>
+                      <TableCell className="text-right">${item.price}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -132,7 +132,7 @@ const PlaceOrderPage = async () => {
                 <div>Total</div>
                 <div>{formatCurrency(cart.totalPrice)}</div>
               </div>
-              <PlaceOrderform/>
+              <PlaceOrderform />
             </CardContent>
           </Card>
         </div>

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import CategoryDrawer from "./category-drawer";
+import MobileNavigation from "./mobile-navigation";
 import CategorySubheader from "./category-subheader";
 import Logo from "./logo";
 import Menu from "./menu";
@@ -12,10 +12,10 @@ const Header = async () => {
   return (
     <header className="sticky w-full top-0 z-10">
       <div className="flex flex-col w-full">
-        <div className="bg-background ml-0 mr-0 w-full px-auto z-50">
+        <div className="bg-primary30 ml-0 mr-0 w-full px-auto z-50">
           <div className={cn("wrapper w-full flex-between border-b")}>
             <div className="flex-start">
-              <CategoryDrawer />
+              <MobileNavigation />
               <Logo />
             </div>
             <div className="hidden md:block">

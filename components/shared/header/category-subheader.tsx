@@ -2,12 +2,16 @@
 
 import { cn } from "@/lib/utils";
 import { Category } from "@/types";
-import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import CategorySelect from "./category-select";
 
 const CategorySubheader = ({ categories }: { categories: Category[] }) => {
   const [isScrolledUp, setIsScrolledUp] = useState(true);
   const [lastScrollTop, setLastScrollTop] = useState(0);
+
+  const pathname = usePathname();
+  const hiddenRoutes = ["/search"];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,9 +30,13 @@ const CategorySubheader = ({ categories }: { categories: Category[] }) => {
     };
   }, [lastScrollTop]);
 
+  if (hiddenRoutes.includes(pathname)) {
+    return null;
+  }
+
   return (
     <div
-      className={`w-full bg-muted transition-transform duration-300 z-10 ${
+      className={`w-full bg-muted transition-transform duration-300 hidden drop-shadow-md md:block z-10 ${
         isScrolledUp ? "translate-y-0" : "-translate-y-full"
       }`}
     >

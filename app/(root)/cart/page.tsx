@@ -9,7 +9,7 @@ const CartPage = async () => {
   const cart = await getMyCart();
 
   return (
-    <div>
+    <div className="min-h-screen">
       <CartTable cart={cart} />
     </div>
   );

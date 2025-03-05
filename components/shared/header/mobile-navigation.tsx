@@ -11,12 +11,11 @@ import { getAllCategories } from "@/lib/actions/category.actions";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 
-const CategoryDrawer = async () => {
+const MobileNavigation = async () => {
   const categories = await getAllCategories({ excludeAll: true });
-  console.log("categories: ", categories);
 
   return (
-    <>
+    <div className="md:hidden">
       <Drawer direction="left">
         <DrawerTrigger asChild>
           <Button variant="outline">
@@ -45,8 +44,8 @@ const CategoryDrawer = async () => {
           </DrawerHeader>
         </DrawerContent>
       </Drawer>
-    </>
+    </div>
   );
 };
 
-export default CategoryDrawer;
+export default MobileNavigation;
