@@ -5,7 +5,7 @@ import { Button } from "./button";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const TARGET_DATE = new Date("2025-03-10T00:00:00");
+const TARGET_DATE = new Date("2025-04-10T00:00:00");
 
 // Function to calculate the time remaining
 const calculateTimeRemaining = (targetDate: Date) => {
@@ -77,7 +77,7 @@ const DealCountdown = () => {
         </div>
         <div className="flex justify-center">
           <Image
-            src="/images/promo.jpg"
+            src="/images/promo.webp"
             alt="promotion"
             width={300}
             height={200}
@@ -105,17 +105,21 @@ const DealCountdown = () => {
         </ul>
         <div className="text-center">
           <Button asChild>
-            <Link href="/search">View Products</Link>
+            <Link href="/product/purina-pro-plan-chicken-formula">
+              View Product
+            </Link>
           </Button>
         </div>
       </div>
       <div className="flex justify-center">
-        <Image
-          src="/images/promo.jpg"
-          alt="promo image"
-          width={300}
-          height={200}
-        />
+        <Link href="/product/purina-pro-plan-chicken-formula">
+          <Image
+            src="/images/promo.webp"
+            alt="promo image"
+            width={300}
+            height={200}
+          />
+        </Link>
       </div>
     </section>
   );

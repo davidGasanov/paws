@@ -343,13 +343,21 @@ const ProductForm = ({
                 )}
               />
               {isFeatured && banner && (
-                <Image
-                  src={banner}
-                  alt="banner image"
-                  className="w-full object-cover object-center rounded-sm"
-                  width={1920}
-                  height={680}
-                />
+                <div>
+                  <Image
+                    src={banner}
+                    alt="banner image"
+                    className="w-full object-cover object-center rounded-sm"
+                    width={1920}
+                    height={680}
+                  />
+                  <Button
+                    className="mt-5"
+                    onClick={() => form.setValue("banner", null)}
+                  >
+                    Remove image
+                  </Button>
+                </div>
               )}
 
               {isFeatured && !banner && (
