@@ -10,6 +10,7 @@ import {
 import { signOutUser } from "@/lib/actions/user.actions";
 import { UserIcon } from "lucide-react";
 import Link from "next/link";
+import { FaUser } from "react-icons/fa";
 
 const UserButton = async () => {
   const session = await auth();
@@ -27,16 +28,27 @@ const UserButton = async () => {
   const firstInitial = session?.user?.name?.charAt(0).toUpperCase() ?? "U";
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-2 items-center w-full">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <div className="flex items-center">
-            <Button
-              variant="ghost"
-              className="bg-gray-200 relative w-8 h-8 rounded-full ml-4 flex items-center justify-center"
-            >
-              {firstInitial}
-            </Button>
+          <div className="w-full">
+            <div className="items-center hidden md:flex">
+              <Button
+                variant="ghost"
+                className="bg-gray-200 relative w-8 h-8 rounded-full md:ml-4 flex items-center justify-center"
+              >
+                {firstInitial}
+              </Button>
+            </div>
+            <div className="items-center flex md:hidden w-full">
+              <Button
+                variant="ghost"
+                className="bg-gray-200 relative w-full flex items-center justify-center"
+              >
+                <FaUser className="opacity-90" />
+                {session?.user?.name}
+              </Button>
+            </div>
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>

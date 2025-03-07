@@ -1,3 +1,4 @@
+import AnimalQuickNav from "@/components/shared/product/animal-quick-nav";
 import ProductCarousel from "@/components/shared/product/carousel";
 import ProductList from "@/components/shared/product/product-list";
 import DealCountdown from "@/components/ui/deal-countdown";
@@ -20,6 +21,7 @@ const HomePage = async () => {
       {featuredProducts.length > 0 && (
         <ProductCarousel data={featuredProducts} />
       )}
+      <AnimalQuickNav/>
       <ProductList data={latestProducts} title="Newest arrivals" limit={4} />
       <ViewAllProductsButton />
       <DealCountdown />

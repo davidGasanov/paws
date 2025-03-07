@@ -18,9 +18,9 @@ const ModeToggle = () => {
   const [mounted, setMounted] = useState(false);
 
   const IconByTheme = {
-    light: <Sun color="#FFF"/>,
-    dark: <Moon color="#FFF"/>,
-    system: <SunMoon color="#FFF"/>,
+    light: <Sun color="#FFF" />,
+    dark: <Moon color="#FFF" />,
+    system: <SunMoon color="#FFF" />,
   };
 
   useEffect(() => setMounted(true), []);
@@ -32,7 +32,7 @@ const ModeToggle = () => {
       <DropdownMenuTrigger asChild>
         <Button
           variant={"ghost"}
-          className="focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-primary"
+          className="bg-primary w-full md:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-primary"
         >
           {IconByTheme[theme as keyof typeof IconByTheme]}
         </Button>

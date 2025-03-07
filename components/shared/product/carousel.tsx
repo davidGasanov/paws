@@ -21,7 +21,7 @@ const ProductCarousel = ({ data }: ProductCarouselProps) => {
 
   return (
     <Carousel
-      className="md:w-[90%] xl:w-full mx-auto mb-12"
+      className="md:w-[90%] xl:w-full mx-auto mb-12 overflow-clip md:overflow-visible"
       opts={{
         loop: true,
       }}
@@ -46,7 +46,7 @@ const ProductCarousel = ({ data }: ProductCarouselProps) => {
                   sizes={"100vw"}
                   className="w-full h-auto"
                 />
-                <div className="absolute inset-0 flex items-end justify-center">
+                <div className="absolute inset-0 hidden md:flex items-end justify-center">
                   <h2 className="bg-gray-900 bg-opacity-50 text-2xl font-bold px-2 text-white">
                     {product.name}
                   </h2>
