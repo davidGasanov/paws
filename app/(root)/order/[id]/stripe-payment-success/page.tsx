@@ -3,6 +3,7 @@ import { getOrderById } from "@/lib/actions/order.actions";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Stripe from "stripe";
+import { FaCheckCircle } from "react-icons/fa";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
@@ -35,10 +36,14 @@ const StripePaymentSuccessPage = async (props: {
   if (!isSuccess) return redirect(`/order/${id}`);
 
   return (
-    <div className="max-w-4xl w-full mx-auto space-y-8">
-      <div className="flex flex-col gap-6 items-center">
-        <h1 className="h1-bold">Thank you for your purchase!</h1>
-        <div>We are processing your order.</div>
+    <div className="max-w-4xl md:min-h-[400px] w-full mx-auto space-y-8">
+      <div className="flex flex-col gap-6 items-center mt-10">
+        <FaCheckCircle size={82} color="#4BB543" />
+        <h1 className="h1-bold text-center">Thank you for your purchase!</h1>
+        <div className="max-w-[90%] md:max-w-[40%] text-center">
+          We are processing your order. You can check order details by clicking
+          the button below.
+        </div>
         <Button asChild>
           <Link href={`/order/${id}`}>View order</Link>
         </Button>

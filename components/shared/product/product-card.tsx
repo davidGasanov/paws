@@ -13,12 +13,13 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Card>
-      <CardHeader>
-        <Link href={`/product/${product.slug}`}>
+      <CardHeader className="h-[300px] box-content">
+        <Link href={`/product/${product.slug}`} className="max-h-[300px]">
           <Image
             src={product.images[0]}
             width={300}
             height={300}
+            className="object-contain h-[300px]"
             alt={product.name}
           />
         </Link>

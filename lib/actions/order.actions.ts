@@ -20,6 +20,7 @@ export async function createOrder() {
     if (!session) throw new Error("User is not authenticated!");
 
     const cart = await getMyCart();
+
     if (!cart || cart.items.length === 0) {
       return {
         success: false,
@@ -56,6 +57,7 @@ export async function createOrder() {
       taxPrice: cart.taxPrice,
       totalPrice: cart.totalPrice,
     });
+    console.log("cart items before insertion: ", cart.items);
 
     // Create a transaction to create order and order items in database
     const insertedOrderId = await prisma.$transaction(async (tx) => {
@@ -99,6 +101,7 @@ export async function createOrder() {
     if (isRedirectError(error)) {
       throw error;
     }
+    throw error;
     return { success: false, message: formatError(error) };
   }
 }

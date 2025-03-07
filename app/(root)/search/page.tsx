@@ -13,6 +13,7 @@ import {
 import { capitalizeFirstLetter, cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { FileQuestion, XIcon } from "lucide-react";
+import Pagination from "@/components/shared/pagination";
 
 interface SearchParams {
   categoryId?: string;
@@ -135,7 +136,6 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
     }
   }
 
-  console.log("main categories after update: ", mainCategories);
   const allCategories = await getAllCategories({
     primariesOnly: false,
     excludeAll: true,
@@ -347,6 +347,9 @@ const SearchPage = async (props: { searchParams: Promise<SearchParams> }) => {
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
+        )}
+        {products.totalPages && products.totalPages > 1 && (
+          <Pagination page={page} totalPages={products.totalPages} />
         )}
       </div>
     </div>

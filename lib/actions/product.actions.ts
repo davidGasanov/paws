@@ -134,7 +134,14 @@ export async function getAllProducts({
       },
     });
 
-    const dataCount = await prisma.product.count({ where: queryFilter });
+    const dataCount = await prisma.product.count({
+      where: {
+        ...queryFilter,
+        ...categoryFilter,
+        ...priceFilter,
+        ...ratingFilter,
+      },
+    });
 
     if (!data) {
       throw new Error("Error fetching products");

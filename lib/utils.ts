@@ -26,6 +26,8 @@ export function formatError(error: any) {
   } else if (error.name === "PrismaClientKnownRequestError") {
     console.log("error meta target: ", error.meta.target);
 
+      
+    
     const field = error.meta.target ? error.meta.target[0] : "Field";
     return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
   } else {

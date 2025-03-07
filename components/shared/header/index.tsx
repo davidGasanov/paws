@@ -13,7 +13,7 @@ const Header = async () => {
     <header className="sticky w-full top-0 z-10">
       <div className="flex flex-col w-full">
         <div className="bg-primary30 ml-0 mr-0 w-full px-auto z-50">
-          <div className={cn("wrapper w-full flex-between border-b")}>
+          <div className={cn("wrapper w-full flex-between border-b border-none")}>
             <div className="flex-start">
               <MobileNavigation />
               <Logo />
