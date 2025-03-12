@@ -26,29 +26,35 @@ const AnimalQuickNav = () => {
   ];
 
   return (
-    <section className="my-[100px]">
-      <div className="flex justify-between items-center">
-        <h2 className="h2-bold">Shop by Animal</h2>
-        <Link href="/search" className="text-primary">
-          View all
-        </Link>
-      </div>
-      <div className="mt-[46px] w-fit mx-auto grid grid-cols-2 gap-8 md:gap-32 sm:grid-cols-4">
-        {animalsList.map((animal) => (
-          <Link
-            key={animal.name}
-            href={`/search?category=${animal.categoryId}`}
-            className="flex justify-center items-center w-[120px] h-[120px] md:w-[200px] md:h-[200px] rounded-full shadow-md bg-muted transition-all group duration-200 ease-in-out hover:bg-primary30/90 hover:shadow-2xl"
-          >
-            <Image
-              className="w-[90px] md:w-[140px] rounded-full overflow-visible"
-              width={200}
-              height={200}
-              src={animal.image}
-              alt={animal.name}
-            />
+    <section className="my-[50px] py-[50px] w-screen bg-muted ml-[calc(-50vw+50%)]">
+      <div className={"wrapper"}>
+        <div className="flex gap-2 md:gap-0 flex-col md:flex-row justify-between md:items-center">
+          <h2 className="font-extrabold text-3xl tracking-normal">
+            Find the &nbsp;
+            <span className="text-secondary italic">Perfect Products</span>
+            &nbsp; for Your Pet
+          </h2>
+          <Link href="/search" className="text-primary">
+            View all
           </Link>
-        ))}
+        </div>
+        <div className="mt-[26px] md:mt-[46px] w-fit mx-auto grid grid-cols-2 gap-8 md:gap-32 sm:grid-cols-4">
+          {animalsList.map((animal) => (
+            <Link
+              key={animal.name}
+              href={`/search?category=${animal.categoryId}`}
+              className="flex justify-center items-center w-[120px] h-[120px] md:w-[200px] md:h-[200px] rounded-full shadow-md bg-card transition-all group duration-200 ease-in-out hover:bg-primary30/90 hover:shadow-2xl"
+            >
+              <Image
+                className="w-[90px] md:w-[140px] rounded-full overflow-visible"
+                width={200}
+                height={200}
+                src={animal.image}
+                alt={animal.name}
+              />
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );

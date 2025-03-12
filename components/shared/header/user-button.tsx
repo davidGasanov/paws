@@ -17,7 +17,7 @@ const UserButton = async () => {
 
   if (!session) {
     return (
-      <Button asChild>
+      <Button asChild className="dark:bg-primary-foreground dark:text-primary">
         <Link href="/sign-in">
           <UserIcon /> Sign in
         </Link>
@@ -35,7 +35,7 @@ const UserButton = async () => {
             <div className="items-center hidden md:flex">
               <Button
                 variant="ghost"
-                className="bg-gray-200 relative w-8 h-8 rounded-full md:ml-4 flex items-center justify-center"
+                className="bg-gray-200 relative w-8 h-8 rounded-full md:ml-4 flex items-center justify-center dark:bg-primary-foreground"
               >
                 {firstInitial}
               </Button>

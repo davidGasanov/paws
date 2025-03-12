@@ -59,6 +59,9 @@ export default {
           "5": "hsl(var(--chart-5))",
         },
       },
+      backgroundImage: {
+        pattern: "url('/images/background/pet-pattern.jpg')",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

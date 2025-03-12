@@ -32,7 +32,7 @@ const ModeToggle = () => {
       <DropdownMenuTrigger asChild>
         <Button
           variant={"ghost"}
-          className="bg-primary w-full md:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-primary"
+          className="bg-primary w-full md:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-primary dark:hover:bg-primary-foreground"
         >
           {IconByTheme[theme as keyof typeof IconByTheme]}
         </Button>

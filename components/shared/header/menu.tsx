@@ -19,7 +19,7 @@ const Menu = () => {
         <Button
           asChild
           variant="ghost"
-          className="bg-none hover:bg-primary hover:text-[#FFF]"
+          className="bg-none hover:bg-primary hover:text-[#FFF] dark:hover:bg-primary-foreground"
         >
           <Link href="/cart" className="text-[#FFF]">
             <ShoppingCart color="#FFF" /> Cart
