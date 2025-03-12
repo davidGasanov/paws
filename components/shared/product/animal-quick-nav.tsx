@@ -35,7 +35,7 @@ const AnimalQuickNav = () => {
             &nbsp; for Your Pet
           </h2>
           <Link href="/search" className="text-primary">
-            View all
+            View all 
           </Link>
         </div>
         <div className="mt-[26px] md:mt-[46px] w-fit mx-auto grid grid-cols-2 gap-8 md:gap-32 sm:grid-cols-4">
