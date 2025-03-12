@@ -42,7 +42,7 @@ const AnimalQuickNav = () => {
           {animalsList.map((animal) => (
             <Link
               key={animal.name}
-              href={`/search?category=${animal.categoryId}`}
+              href={`/search?categoryId=${animal.categoryId}`}
               className="flex justify-center items-center w-[120px] h-[120px] md:w-[200px] md:h-[200px] rounded-full shadow-md bg-card transition-all group duration-200 ease-in-out hover:bg-primary30/90 hover:shadow-2xl"
             >
               <Image
